@@ -1,5 +1,6 @@
 // Punto 1
 
+
 #define red 3
 #define amarillo 2
 #define verde 1
@@ -29,6 +30,7 @@ void loop()
   delay(3000);
   digitalWrite(amarillo, LOW);
 }
+
 
 // Punto 2
 
@@ -261,4 +263,77 @@ void loop()
 }
 
 
-// Punto 6
+// Punto 1 Sección 2
+
+
+#define red 3
+#define green 2
+#define blue 1
+#define red1 6
+#define green1 5
+#define blue1 4
+void setup()
+{
+  pinMode(3, OUTPUT);
+}
+
+void loop()
+{
+  analogWrite(3, 50);
+  delay(500);
+  analogWrite(3, 100);
+  delay(500);
+  analogWrite(3, 150);
+  delay(500);
+  analogWrite(3, 200);
+  delay(500);
+  analogWrite(3, 255);
+  delay(500);
+}
+
+
+// Punto 2 Sección 2
+
+
+#define uno 0
+#define dos 1
+#define tres 2
+#define cuatro 3
+#define cinco 5
+#define seis 6
+#define siete 9
+#define ocho 10
+#define nueve 11
+#define diez 12
+void setup()
+{
+  pinMode(0, OUTPUT);
+  pinMode(1, OUTPUT);
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+}
+
+void loop()
+{
+  digitalWrite(diez, LOW);
+  analogWrite(11, 10);
+  analogWrite(10, 30);
+  analogWrite(9, 50);
+  analogWrite(6, 70);
+  analogWrite(5, 90);
+  analogWrite(3, 120);
+  analogWrite(1, 150);
+  analogWrite(0, 180);
+  digitalWrite(tres, HIGH);
+}
+
+
+// Punto 3 Sección 2
+
+
