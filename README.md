@@ -5,26 +5,21 @@
 **Correo: sebastiangb.et32@gmail.com**
 
 Consigna:
-Controlar un anillo de LEDs NeoPixel 12LEDs para mostrar animaciones de colores, cambiando los LEDs uno por uno o en grupos, .  
+Implementar un sistema para controlar un ventilador y una lámpara en una habitación, usando:
+Un sensor de temperatura para medir la temperatura ambiente.
+Un sensor de movimiento (PIR) para detectar si hay alguien en la habitación.
+Controlar un ventilador (simulado con un Motor DC gris) de 12V con velocidad variable (dimmer) dependiendo de la temperatura, 
+y una lámpara 12V que se encienda solo cuando hay personas.
+  Temperatura mayor a 50°C  
+Ventilador a máxima velocidad si importar si hay o no gente dentro
+ Temperatura menor a 50°C  
+el ventilador esta apagado
 
-
-1) Encender LEDs uno a uno con diferentes colores (rojo, verde, azul, amarillo, etc.):  
-Prender el LED 0 de color rojo, esperar 500 ms,
-Apagar el LED 0, prender el LED 1 de color verde, esperar 500 ms,
-Apagar el LED 1, prender el LED 2 de color azul, esperar 500 ms,
-… y así hasta el LED 12, cambiando los colores.
-2) Crear una animación de “barrido” hacia adelante y hacia atrás:  
-Encender el LED 0, luego apagarlo y encender el 1, luego el 2, etc. hasta el último LED
-Luego, hacer el barrido en sentido contrario, LED 13 a LED 0
-3) Mostrar un patrón de colores Randoms:
-Por ejemplo, LEDs pares en rojo  esperar por 500ms
-luego se apagan
-y LEDs impares en azul, mantener por 500ms
-luego se apagan
-cambiar la combinación de colores entre cada prendido y apagado
-El ciclo principal del programa deberá ejecutar la 1° secuencia de efectos, al terminar esperar 1s reproducir el 2° efecto esperar 1s reproducir el 3° efecto y volver a empezar
-
-
-Extra:
-Cambiar la velocidad de la animación de cada efecto con un potenciómetro (usando lectura analógica)
-Agregar un botón para cambiar el patrón de efecto activo en vez de que pase automáticamente al terminar
+Si hay movimiento (persona detectada) y temperatura menor a 50°C  
+Ventilador se enciende con velocidad proporcional a temperatura en rangos:
+Lámpara encendida mientras tengamos persona dentro
+≤15°C → velocidad mínima PWM = 50
+= 30°C → PWM = 150
+>= 50°C → PWM = 255 (máximo)
+Si no hay persona (sin movimiento) 
+lámpara apagada
