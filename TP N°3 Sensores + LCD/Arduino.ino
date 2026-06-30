@@ -1,103 +1,80 @@
 #define PIR A0
-#define trig 11
-#define echo 10
-#define foto_receptor A2
-#define tocar A3
-#define red 6
-#define green 5
-#define blue 3
-#define buzzer 9
+#define va 11
+#define vuelve 10
+#define r 6
+#define g 5
+#define b 3
+#define sonido 9
+#define boton1 4
 
-void setup()
-{
+bool estadoBoton = false;
+bool ultimo = false;
+
+void setup() {
   pinMode(PIR, INPUT);
-  pinMode(foto_receptor, INPUT);
-  pinMode(tocar, INPUT);
-  pinMode(echo, INPUT);
-  
-  pinMode(red, OUTPUT);
-  pinMode(green, OUTPUT);
-  pinMode(blue, OUTPUT);
-  pinMode(buzzer, OUTPUT);
-  pinMode(trig, OUTPUT);
-  
+  pinMode(vuelve, INPUT);
+  pinMode(boton1, INPUT);
+  pinMode(r, OUTPUT);
+  pinMode(g, OUTPUT);
+  pinMode(b, OUTPUT);
+  pinMode(sonido, OUTPUT);
+  pinMode(va, OUTPUT);
   Serial.begin(9600);
 }
 
-void loop()
-{
-  float luz = analogRead(foto_receptor);
-  float noche = map(luz, 1022, 713, 0, 100);
-  if (noche <= 20)
-  {
-    float temperatura_1 = analogRead(tocar);
-    float temperatura = map(temperatura_1, 20, 358, -40, 125);
-    int movimiento = analogRead(PIR);
-    if (temperatura >= 39 || movimiento == 1018)
-    {
-      Serial.println("Intruso");
-      analogWrite(buzzer, 1000);
-      digitalWrite(red, 255);
-      delay(1000);
-      analogWrite(buzzer, 0);
-      digitalWrite(red, 0);
-      delay(100);
-    }
-    analogWrite(buzzer, 0);
-    digitalWrite(red, 0);
+void loop() {
+  bool boton = digitalRead(boton1);
+  if (boton == HIGH && ultimo == LOW) {
+    estadoBoton = !estadoBoton;
   }
-  else
-  {
-    digitalWrite(trig, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trig, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig, LOW);
-    long duracion = pulseIn(echo, HIGH);
-    float distancia = duracion * 0.0001715;
-    if (distancia < 1)
-    {
-      Serial.println("Se acercaron demasiado a la obra");
-      digitalWrite(red, HIGH);
-      analogWrite(buzzer, 1000);
-      delay(1000);
-      digitalWrite(red, LOW);
-      analogWrite(buzzer, 0);
-      delay(100);
-    }
-    
-    float temperatura_1 = analogRead(tocar);
-    float temperatura = map(temperatura_1, 20, 358, -40, 125);
-    if (temperatura >= 39)
-    {
-      Serial.println("Se toco la obra");
-      analogWrite(buzzer, 1000);
-      digitalWrite(red, HIGH);
-      delay(1000);
-      analogWrite(buzzer, 0);
-      digitalWrite(red, LOW);
-      delay(100);
-    }
+  ultimo = boton;
 
-    int movimiento = analogRead(PIR);
-    if (movimiento == 1018)
-    {
-      Serial.println("se detecto movimiento cerca de la obra");
-      digitalWrite(red, HIGH);
-      digitalWrite(green, HIGH);
-      analogWrite(buzzer, 1000);
-      delay(1000);
-      digitalWrite(red, LOW);
-      digitalWrite(green, LOW);
-      analogWrite(buzzer, 0);
+  digitalWrite(va, LOW);
+  delayMicroseconds(2);
+  digitalWrite(va, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(va, LOW);
+
+  float echo = pulseIn(vuelve, HIGH, 30000);
+  float dis = echo * 0.034 / 2;
+
+  Serial.print("Distancia actual del objeto: ");
+  Serial.print(dis);
+  Serial.print(" cm | Alarma: ");
+  Serial.println(estadoBoton ? "Activada" : "Desactivada");
+
+  analogWrite(r, 0);
+  analogWrite(g, 0);
+  analogWrite(b, 0);
+  digitalWrite(sonido, LOW);
+
+  if (!estadoBoton) {
+    analogWrite(b, 255);
+    return;
+  }
+
+  bool mov = digitalRead(PIR);
+  if (mov == HIGH) {
+    if (dis > 150) {
+      Serial.println("Zona segura.");
+      analogWrite(g, 255);
     }
-    Serial.print("Temperatura: ");
-    Serial.println(temperatura);
-    Serial.print("Movimiento: ");
-    Serial.println(movimiento);
-    Serial.print("Porcentaje de luz dia noche ");
-    Serial.println(noche);
-    Serial.print("Distancia: ");
-    Serial.println(distancia);
+    else if (dis >= 50 && dis <= 150) {
+      Serial.println("Precaución.");
+      analogWrite(r, 255);
+      analogWrite(g, 30);
+      digitalWrite(sonido, HIGH);
+      delay(250);
+      digitalWrite(sonido, LOW);
+      delay(250);
+    }
+    else if (dis < 50) {
+      Serial.println("¡Peligro!");
+      analogWrite(r, 255);
+      digitalWrite(sonido, HIGH);
+      delay(25);
+      digitalWrite(sonido, LOW);
+      delay(25);
+    }
   }
 }
