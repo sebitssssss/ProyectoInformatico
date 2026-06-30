@@ -170,3 +170,5 @@ void loop()
       }
     }
   }
+
+// no me alcanzó el tiempo para corregir las funciones y su sintaxis
